@@ -4,13 +4,15 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import joblib
 
-# Load dataset
+
+# Load the Iris dataset
 iris = load_iris()
 
 X = iris.data
 y = iris.target
 
-# Split dataset
+
+# Split the dataset
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
@@ -18,21 +20,26 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42
 )
 
-# Create model
+
+# Create the model
 model = RandomForestClassifier(random_state=42)
 
-# Train model
+
+# Train the model
 model.fit(X_train, y_train)
+
 
 # Make predictions
 y_pred = model.predict(X_test)
+
 
 # Calculate accuracy
 accuracy = accuracy_score(y_test, y_pred)
 
 print("Accuracy:", accuracy)
 
-# Save model
+
+# Save the model
 joblib.dump(model, "ml/saved_model/model.joblib")
 
 print("Model saved successfully!")
