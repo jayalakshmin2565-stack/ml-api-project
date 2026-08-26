@@ -1,14 +1,11 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 import joblib
+
+from app.models.schemas import PredictionInput
 
 app = FastAPI()
 
 model = joblib.load("ml/saved_model/model.joblib")
-
-
-class PredictionInput(BaseModel):
-    features: list[float]
 
 
 @app.get("/")
