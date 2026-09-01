@@ -10,3 +10,11 @@ class PredictionOutput(BaseModel):
     confidence: float | None
     request_id: str
     model_version: str
+
+
+class PredictionBatchInput(BaseModel):
+    inputs: list[PredictionInput] = Field(..., min_length=1, max_length=100)
+
+
+class PredictionBatchOutput(BaseModel):
+    predictions: list[PredictionOutput]
