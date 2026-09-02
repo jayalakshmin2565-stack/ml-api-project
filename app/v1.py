@@ -3,6 +3,7 @@ import joblib
 import time
 import json
 
+from app.config import settings
 from app.models.schemas import (
     PredictionInput,
     PredictionOutput,
@@ -12,11 +13,11 @@ from app.models.schemas import (
 from app.logging_config import logger
 
 
-router = APIRouter(prefix="/api/v1")
+router = APIRouter()
 
 
-# Load model once
-model = joblib.load("ml/saved_model/model.joblib")
+# Load model once using configuration
+model = joblib.load(settings.MODEL_PATH)
 
 
 @router.get("/")
@@ -35,7 +36,7 @@ def health():
 @router.get("/model-info")
 def model_info():
     try:
-        with open("ml/saved_model/model_metadata.json", "r") as file:
+        with open(settings.MODEL_METADATA_PATH, "r") as file:
             metadata = json.load(file)
 
         return metadata
@@ -76,7 +77,7 @@ def predict(data: PredictionInput, request: Request):
             "prediction": int(prediction[0]),
             "confidence": confidence,
             "request_id": request_id,
-            "model_version": "1.0"
+            "model_version": settings.MODEL_VERSION
         }
 
     except Exception as exc:
@@ -96,6 +97,13 @@ def predict(data: PredictionInput, request: Request):
 @router.post("/predict-batch", response_model=PredictionBatchOutput)
 def predict_batch(data: PredictionBatchInput, request: Request):
     request_id = request.state.request_id
+
+    # Enforce maximum batch size from configuration
+    if len(data.inputs) > settings.MAX_BATCH_SIZE:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Batch size cannot exceed {settings.MAX_BATCH_SIZE}"
+        )
 
     start_time = time.time()
 
@@ -126,7 +134,7 @@ def predict_batch(data: PredictionBatchInput, request: Request):
                     "prediction": int(prediction),
                     "confidence": confidence,
                     "request_id": request_id,
-                    "model_version": "1.0"
+                    "model_version": settings.MODEL_VERSION
                 }
             )
 
@@ -158,3 +166,4 @@ def predict_batch(data: PredictionBatchInput, request: Request):
             status_code=500,
             detail="Batch prediction failed"
         )
+

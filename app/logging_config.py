@@ -1,10 +1,12 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
+from app.config import settings
+
 
 def setup_logger():
     logger = logging.getLogger("ml_api")
-    logger.setLevel(logging.INFO)
+    logger.setLevel(getattr(logging, settings.LOG_LEVEL.upper()))
 
     if logger.handlers:
         return logger
