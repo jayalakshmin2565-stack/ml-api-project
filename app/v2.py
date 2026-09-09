@@ -1,8 +1,11 @@
 import joblib
-from fastapi import APIRouter, Request
+
+from fastapi import APIRouter, Request, Depends
 from pydantic import BaseModel, Field
 
 from app.config import settings
+from app.security import verify_api_key
+
 
 router = APIRouter()
 
@@ -20,10 +23,18 @@ class PredictionOutputV2(BaseModel):
     model_version: str
 
 
-@router.post("/predict", response_model=PredictionOutputV2)
+@router.post(
+    "/predict",
+    response_model=PredictionOutputV2,
+    dependencies=[Depends(verify_api_key)]
+)
 def predict_v2(data: PredictionInputV2, request: Request):
+
     prediction = model.predict([data.features])[0]
-    probabilities = model.predict_proba([data.features])[0].tolist()
+
+    probabilities = model.predict_proba(
+        [data.features]
+    )[0].tolist()
 
     return {
         "prediction": int(prediction),

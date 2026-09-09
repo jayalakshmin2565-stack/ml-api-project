@@ -3,7 +3,12 @@ from fastapi.responses import JSONResponse, Response
 import uuid
 import time
 
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import (
+    Counter,
+    Histogram,
+    generate_latest,
+    CONTENT_TYPE_LATEST,
+)
 
 from app.logging_config import logger
 from app.v1 import router as v1_router
@@ -20,7 +25,10 @@ app.include_router(v1_router, prefix="/api/v1")
 app.include_router(v2_router, prefix="/api/v2")
 
 
-# Prometheus metrics
+# ---------------------------------------------------------
+# Prometheus Metrics
+# ---------------------------------------------------------
+
 REQUEST_COUNT = Counter(
     "http_requests_total",
     "Total number of HTTP requests",
@@ -33,6 +41,10 @@ REQUEST_DURATION = Histogram(
     ["method", "path"]
 )
 
+
+# ---------------------------------------------------------
+# Request Logging Middleware
+# ---------------------------------------------------------
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -96,6 +108,10 @@ async def log_requests(request: Request, call_next):
         raise
 
 
+# ---------------------------------------------------------
+# Prometheus Metrics Endpoint
+# ---------------------------------------------------------
+
 @app.get("/metrics")
 async def metrics():
     return Response(
@@ -103,6 +119,10 @@ async def metrics():
         media_type=CONTENT_TYPE_LATEST
     )
 
+
+# ---------------------------------------------------------
+# Global ValueError Handler
+# ---------------------------------------------------------
 
 @app.exception_handler(ValueError)
 async def value_error_handler(request: Request, exc: ValueError):
@@ -116,5 +136,8 @@ async def value_error_handler(request: Request, exc: ValueError):
 
     return JSONResponse(
         status_code=500,
-        content={"detail": "Invalid prediction data"}
+        content={
+            "detail": "Invalid prediction data",
+            "request_id": request_id
+        }
     )

@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     MAX_BATCH_SIZE: int = 100
     API_TITLE: str = "ML Model API"
     MODEL_VERSION: str = "1.0"
+    API_KEY: str = ""
 
     model_config = SettingsConfigDict(
         env_file=".env",

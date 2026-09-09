@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Depends
 import joblib
 import time
 import json
@@ -11,6 +11,7 @@ from app.models.schemas import (
     PredictionBatchOutput
 )
 from app.logging_config import logger
+from app.security import verify_api_key
 
 
 router = APIRouter()
@@ -53,7 +54,11 @@ def model_info():
         )
 
 
-@router.post("/predict", response_model=PredictionOutput)
+@router.post(
+    "/predict",
+    response_model=PredictionOutput,
+    dependencies=[Depends(verify_api_key)]
+)
 def predict(data: PredictionInput, request: Request):
     request_id = request.state.request_id
 
@@ -93,12 +98,14 @@ def predict(data: PredictionInput, request: Request):
         )
 
 
-# Batch Prediction
-@router.post("/predict-batch", response_model=PredictionBatchOutput)
+@router.post(
+    "/predict-batch",
+    response_model=PredictionBatchOutput,
+    dependencies=[Depends(verify_api_key)]
+)
 def predict_batch(data: PredictionBatchInput, request: Request):
     request_id = request.state.request_id
 
-    # Enforce maximum batch size from configuration
     if len(data.inputs) > settings.MAX_BATCH_SIZE:
         raise HTTPException(
             status_code=400,
@@ -108,13 +115,10 @@ def predict_batch(data: PredictionBatchInput, request: Request):
     start_time = time.time()
 
     try:
-        # Convert input objects into a list of feature lists
         features = [item.features for item in data.inputs]
 
-        # Predict the entire batch at once
         predictions = model.predict(features)
 
-        # Calculate probabilities for the entire batch once
         probabilities = None
 
         if hasattr(model, "predict_proba"):
@@ -166,4 +170,3 @@ def predict_batch(data: PredictionBatchInput, request: Request):
             status_code=500,
             detail="Batch prediction failed"
         )
-
