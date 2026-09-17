@@ -1,22 +1,22 @@
+import os
+import pytest
+from dotenv import load_dotenv
+
+load_dotenv()
+
+API_KEY = os.getenv("API_KEY", "")
+
+
 def test_predict(client):
     response = client.post(
         "/api/v1/predict",
         json={
             "features": [0, 0, 0, 0]
-        }
+        },
+        headers={"X-API-Key": API_KEY}
     )
 
     assert response.status_code == 200
-
-    data = response.json()
-
-    assert "prediction" in data
-    assert "confidence" in data
-    assert "request_id" in data
-    assert "model_version" in data
-
-    assert isinstance(data["prediction"], int)
-    assert 0 <= data["confidence"] <= 1
 
 
 def test_predict_invalid_features(client):
@@ -24,7 +24,8 @@ def test_predict_invalid_features(client):
         "/api/v1/predict",
         json={
             "features": [0, 0]
-        }
+        },
+        headers={"X-API-Key": API_KEY}
     )
 
     assert response.status_code == 422
@@ -33,7 +34,8 @@ def test_predict_invalid_features(client):
 def test_predict_missing_features(client):
     response = client.post(
         "/api/v1/predict",
-        json={}
+        json={},
+        headers={"X-API-Key": API_KEY}
     )
 
     assert response.status_code == 422

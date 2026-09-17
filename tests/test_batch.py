@@ -1,3 +1,11 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+API_KEY = os.getenv("API_KEY", "")
+
+
 def test_predict_batch(client):
     response = client.post(
         "/api/v1/predict-batch",
@@ -10,7 +18,8 @@ def test_predict_batch(client):
                     "features": [1, 1, 1, 1]
                 }
             ]
-        }
+        },
+        headers={"X-API-Key": API_KEY}
     )
 
     assert response.status_code == 200
@@ -33,8 +42,8 @@ def test_predict_batch_too_large(client):
         "/api/v1/predict-batch",
         json={
             "inputs": inputs
-        }
+        },
+        headers={"X-API-Key": API_KEY}
     )
 
     assert response.status_code == 422
-

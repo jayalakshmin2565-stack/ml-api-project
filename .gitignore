@@ -1,4 +1,8 @@
 venv/
+.venv/
+.venv-1/
 __pycache__/
+.pytest_cache/
 .env
 app.log
+*.pyc
