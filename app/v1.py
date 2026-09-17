@@ -12,6 +12,7 @@ from app.models.schemas import (
 )
 from app.logging_config import logger
 from app.security import verify_api_key
+from app.metrics import PREDICTIONS_TOTAL
 
 
 router = APIRouter()
@@ -70,6 +71,11 @@ def predict(data: PredictionInput, request: Request):
         if hasattr(model, "predict_proba"):
             probabilities = model.predict_proba([data.features])
             confidence = float(max(probabilities[0]))
+
+        # Custom Prometheus ML metric
+        PREDICTIONS_TOTAL.labels(
+            predicted_class=str(int(prediction[0]))
+        ).inc()
 
         logger.info(
             f"prediction_success "
@@ -132,6 +138,11 @@ def predict_batch(data: PredictionBatchInput, request: Request):
 
             if probabilities is not None:
                 confidence = float(max(probabilities[i]))
+
+            # Custom Prometheus ML metric
+            PREDICTIONS_TOTAL.labels(
+                predicted_class=str(int(prediction))
+            ).inc()
 
             results.append(
                 {
