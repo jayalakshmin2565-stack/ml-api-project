@@ -29,7 +29,7 @@ flowchart LR
 * Docker Compose
 * Pytest
 * Prometheus
-* GitHub
+* GitHub Actions
 
 ## Machine Learning Model
 
@@ -275,12 +275,13 @@ Through this project, I learned how to:
 * Containerize an application using Docker.
 * Run services using Docker Compose.
 * Organize a production-style ML API project.
+* Set up continuous integration using GitHub Actions.
 
 ## Independent Extension
 
 **GitHub Actions CI**
 
-A GitHub Actions workflow will be added to automatically run the project's test suite whenever code is pushed to the repository.
+A GitHub Actions workflow was added to automatically run the project's test suite whenever code is pushed to the repository.
 
 This helps identify test failures early and improves the reliability of the development workflow.
 
@@ -301,6 +302,7 @@ The project includes:
 * Load testing
 * Docker containerization
 * Docker Compose support
+* GitHub Actions CI
 
 ## Author
 
