@@ -4,7 +4,7 @@
 
 ML Model API is a Machine Learning REST API built using FastAPI.
 
-The project serves a trained Iris Random Forest Classification model through REST API endpoints. It includes API versioning, API-key authentication, batch prediction, model information, health monitoring, Prometheus metrics, automated testing, load testing, and Docker support.
+The project serves a trained Iris Random Forest Classification model through REST API endpoints. It includes API versioning, API-key authentication, batch prediction, model information, health monitoring, Prometheus metrics, automated testing, load testing, Docker support, and GitHub Actions CI.
 
 ## Architecture
 
@@ -240,11 +240,14 @@ ml-api-project/
 ├── model/
 │   └── model.joblib
 │
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
 ├── load_test.py
-├── .env
 ├── .gitignore
 └── README.md
 ```
@@ -274,8 +277,8 @@ Through this project, I learned how to:
 * Perform basic load testing.
 * Containerize an application using Docker.
 * Run services using Docker Compose.
-* Organize a production-style ML API project.
 * Set up continuous integration using GitHub Actions.
+* Organize a production-style ML API project.
 
 ## Independent Extension
 
