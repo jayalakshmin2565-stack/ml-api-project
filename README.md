@@ -33,18 +33,22 @@ flowchart LR
 
 ## Machine Learning Model
 
-The project uses the Iris dataset from Scikit-learn.
+The project uses the Iris dataset provided by Scikit-learn.
 
-**Input features:**
+### Input Features
 
 * Sepal length
 * Sepal width
 * Petal length
 * Petal width
 
-**Model:** Random Forest Classifier
+### Model
 
-**Model version:** 1.0
+**Random Forest Classifier**
+
+### Model Version
+
+**1.0**
 
 ## API Endpoints
 
@@ -71,7 +75,7 @@ Example:
 X-API-Key: YOUR_API_KEY
 ```
 
-Do not commit the real API key to GitHub.
+> **Security:** Do not commit the real API key or `.env` file to GitHub.
 
 ## API Examples
 
@@ -131,7 +135,7 @@ curl http://localhost:8000/metrics
 
 ### 7. Swagger Documentation
 
-Open in your browser:
+Open the following URL in your browser:
 
 ```text
 http://localhost:8000/docs
@@ -139,7 +143,7 @@ http://localhost:8000/docs
 
 ### 8. OpenAPI Specification
 
-Open in your browser:
+Open the following URL in your browser:
 
 ```text
 http://localhost:8000/openapi.json
@@ -147,20 +151,25 @@ http://localhost:8000/openapi.json
 
 ## Running Locally
 
-Create and activate a virtual environment:
+### 1. Create a Virtual Environment
 
 ```powershell
 python -m venv venv
+```
+
+### 2. Activate the Virtual Environment
+
+```powershell
 .\venv\Scripts\Activate.ps1
 ```
 
-Install dependencies:
+### 3. Install Dependencies
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-Start the API:
+### 4. Start the API
 
 ```powershell
 uvicorn app.main:app --reload --port 8000
@@ -240,10 +249,6 @@ ml-api-project/
 ├── model/
 │   └── model.joblib
 │
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
@@ -251,6 +256,8 @@ ml-api-project/
 ├── .gitignore
 └── README.md
 ```
+
+> **Note:** The `.env` file is intentionally not included in the GitHub repository because it may contain the API key.
 
 ## Monitoring
 
@@ -277,14 +284,14 @@ Through this project, I learned how to:
 * Perform basic load testing.
 * Containerize an application using Docker.
 * Run services using Docker Compose.
-* Set up continuous integration using GitHub Actions.
 * Organize a production-style ML API project.
+* Set up continuous integration using GitHub Actions.
 
 ## Independent Extension
 
-**GitHub Actions CI**
+### GitHub Actions CI
 
-A GitHub Actions workflow was added to automatically run the project's test suite whenever code is pushed to the repository.
+A GitHub Actions workflow was added to automatically run the project's test suite when code is pushed to the repository or when a pull request is created.
 
 This helps identify test failures early and improves the reliability of the development workflow.
 
