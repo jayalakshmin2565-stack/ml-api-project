@@ -17,15 +17,22 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Check project files
-        run: |
-          pwd
-          ls
-          ls app
-          git ls-files app
-
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Create test environment
+        run: |
+          echo "API_KEY=test-api-key-123456789" > .env
+          echo "API_KEY=test-api-key-123456789" >> $GITHUB_ENV
+
+      - name: Start API
+        run: |
+          uvicorn app.main:app --host 127.0.0.1 --port 8000 > api.log 2>&1 &
+          sleep 5
+          cat api.log
+          curl -f http://127.0.0.1:8000/api/v1/health
 
       - name: Run tests
         run: python -m pytest -v
