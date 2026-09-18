@@ -29,6 +29,13 @@ jobs:
         run: |
           echo "API_KEY=test-api-key-123456789" > .env
 
+      - name: Check app import
+        run: |
+          pwd
+          ls
+          ls app
+          python -c "import os, sys; print(os.getcwd()); print(sys.path); import app; print(app.__file__)"
+
       - name: Start API
         run: |
           uvicorn app.main:app --host 127.0.0.1 --port 8000 &
@@ -36,4 +43,4 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest -q
+          python -m pytest -q
