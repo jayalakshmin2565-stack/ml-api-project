@@ -17,6 +17,13 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Check project files
+        run: |
+          pwd
+          ls
+          ls app
+          git ls-files app
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
